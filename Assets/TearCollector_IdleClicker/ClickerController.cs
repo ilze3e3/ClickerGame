@@ -14,6 +14,8 @@ public class ClickerController : MonoBehaviour
 
     // Cost
     private float enableIdleCost = 1.0f;
+    public Image notEnoughFundsPopup;
+    float disableFundsPopupTime;
     // Cost Text
     public TextMeshProUGUI cText;
     public TextMeshProUGUI enableIdlePrice;
@@ -120,6 +122,13 @@ public class ClickerController : MonoBehaviour
             currency += addPerSecond * Time.deltaTime;
         }
         cText.text = currency.ToString("0");
+
+        if(Time.time > disableFundsPopupTime)
+        {
+           notEnoughFundsPopup.gameObject.SetActive(false);
+        }
+
+        notEnoughFundsPopup.transform.position = Input.mousePosition;
     }
 
     public IEnumerator AddCurrencyPerSecond(float seconds)
@@ -160,6 +169,7 @@ public class ClickerController : MonoBehaviour
         }
         return;
     }
+
     public void BuyRaiseValueUpgrade(string command)
     {
         if (command.Contains("Idle") && !isIdleActive)
@@ -169,6 +179,11 @@ public class ClickerController : MonoBehaviour
         if (currency < upgrades[command].GetCost())
         {
             // TODO: Make Popup appear that says not enough funds
+            notEnoughFundsPopup.gameObject.SetActive(true);
+            disableFundsPopupTime = Time.time + 3f;
+
+
+
         }
         else
         {
